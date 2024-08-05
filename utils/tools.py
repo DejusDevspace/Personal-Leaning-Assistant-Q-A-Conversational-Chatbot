@@ -1,9 +1,11 @@
 import io
 import os
 import tempfile
-from typing import List
+from typing import List, Optional
+import time
 from langchain_community.document_loaders import Docx2txtLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from utils.prompts import WELCOME_PROMPT
 
 
 def load_file_to_dir(file, suffix: str) -> str | None:
@@ -91,5 +93,19 @@ def process_file(file_path: str, file_type: str) -> List:
         # print(texts)
         return texts
 
+
+def stream_data(data: Optional[str] = None):
+    """
+    Creates a stream text output. Displays the introduction text if no parameter is passed.
+    :param data: The text to stream.
+    """
+    if not data:
+        for word in WELCOME_PROMPT.split(" "):
+            yield word + " "
+            time.sleep(0.1)
+    else:
+        for word in data.split(" "):
+            yield word + " "
+            time.sleep(0.1)
 
 # doc = process_file(file_path=r"C:\Users\Deju\Downloads\human-resources-resume-template.docx", file_type="docx")
