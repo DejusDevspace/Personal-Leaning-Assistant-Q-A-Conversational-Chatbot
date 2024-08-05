@@ -4,6 +4,8 @@ Given a chat history and the latest user question which might make reference to 
 the chat history, generate a standalone question which can be understood without the chat history.
 
 Do NOT answer the question, just restructure it if needed and otherwise, return it as is.
+
+If there is no history, do not do anything, just say "no chat history".
 """
 
 # Question-answer system prompt
