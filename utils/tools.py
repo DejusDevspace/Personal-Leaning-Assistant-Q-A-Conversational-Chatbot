@@ -5,10 +5,8 @@ from typing import List
 from langchain_community.document_loaders import Docx2txtLoader, PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-import streamlit as st
 
-
-def load_file(file, suffix: str) -> str | None:
+def load_file_to_dir(file, suffix: str) -> str | None:
     """
     Saves an uploaded file to a temporary memory location and returns
     the path to the temporary file.
@@ -24,8 +22,7 @@ def load_file(file, suffix: str) -> str | None:
             file_path = tmp_file.name
         return file_path
     else:
-        st.error("Unsupported file format!")
-        return None
+        raise TypeError("Unsupported file format!")
 
 
 def remove_file(file_path: str) -> None:
