@@ -53,8 +53,9 @@ def process_file(file_path: str, file_type: str) -> List:
         docs = loader.load()
 
         # Append each page to create an individual text string
-        for page in docs:
-            text += page.page_content
+        # for page in docs:
+        #     text += page.page_content
+
         text_splitter = RecursiveCharacterTextSplitter(
             separators=["\n\n", "\n", " ", ""],
             chunk_size=1000,
@@ -62,7 +63,7 @@ def process_file(file_path: str, file_type: str) -> List:
             length_function=len,
             is_separator_regex=False,
         )
-        texts = text_splitter.create_documents([text])
+        texts = text_splitter.split_documents(docs)
 
         # # print(texts)print(len(texts))
         #
@@ -71,12 +72,13 @@ def process_file(file_path: str, file_type: str) -> List:
         text = ""
         loader = PyPDFLoader(file_path)
 
+        pages = loader.load()
         # Append each page to create an individual text string
-        for page in loader.load():
-            text += page.page_content
+        # for page in loader.load():
+        #     text += page.page_content
 
-        # Replace tab spaces with single spaces
-        text = text.replace('\t', ' ')
+        # Replace tab spaces with single spaces (if any)
+        # text = text.replace('\t', ' ')
 
         # Splitting the document into chunks of texts
         text_splitter = RecursiveCharacterTextSplitter(
@@ -87,7 +89,7 @@ def process_file(file_path: str, file_type: str) -> List:
             is_separator_regex=False,
         )
         # Create documents from list of texts
-        texts = text_splitter.create_documents([text])
+        texts = text_splitter.split_documents(pages)
 
         # print(len(texts))
         # print(texts)
