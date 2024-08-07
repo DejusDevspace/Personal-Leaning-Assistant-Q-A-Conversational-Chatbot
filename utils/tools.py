@@ -57,7 +57,7 @@ def process_file(file_path: str, file_type: str) -> List:
             text += page.page_content
         text_splitter = RecursiveCharacterTextSplitter(
             separators=["\n\n", "\n", " ", ""],
-            chunk_size=500,
+            chunk_size=1000,
             chunk_overlap=50,
             length_function=len,
             is_separator_regex=False,
@@ -81,7 +81,7 @@ def process_file(file_path: str, file_type: str) -> List:
         # Splitting the document into chunks of texts
         text_splitter = RecursiveCharacterTextSplitter(
             separators=["\n\n", "\n", " ", ""],
-            chunk_size=500,
+            chunk_size=1000,
             chunk_overlap=50,
             length_function=len,
             is_separator_regex=False,
