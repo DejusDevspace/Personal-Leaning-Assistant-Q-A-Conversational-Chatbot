@@ -10,6 +10,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import MessagesPlaceholder
 from langchain_core.messages import HumanMessage, AIMessage
 # from langchain_core.output_parsers import StrOutputParser
+# from langchain_groq import ChatGroq
 from dotenv import load_dotenv, find_dotenv
 
 from langsmith import traceable
@@ -18,6 +19,10 @@ from utils import prompts
 _ = load_dotenv(find_dotenv())
 
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0)
+# llm = ChatGroq(
+#     model="llama3-70b-8192",
+#     temperature=0.3,
+# )
 embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
 
@@ -44,7 +49,7 @@ def simple_retrieval_chain():
     vector = FAISS.from_documents(documents, embeddings)
     retriever = load_retriever(vector)
 
-    prompt = ChatPromptTemplate.from_template(prompts.QA_SYSTEM_PROMPT)
+    prompt = ChatPromptTemplate.from_template(prompts.RAG_TEMPLATE)
     document_chain = create_stuff_documents_chain(llm, prompt)
 
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
@@ -91,7 +96,7 @@ def conversational_retrieval_chain():
     ]
 
     qa_prompt = ChatPromptTemplate.from_messages([
-        ("system", prompts.QA_SYSTEM_PROMPT),
+        ("system", prompts.RAG_TEMPLATE),
         MessagesPlaceholder(variable_name="chat_history"),
     ])
     document_chain = create_stuff_documents_chain(llm, qa_prompt)
