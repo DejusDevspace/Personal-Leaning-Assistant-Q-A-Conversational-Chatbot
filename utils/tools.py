@@ -3,9 +3,19 @@ import os
 import tempfile
 from typing import List, Optional
 import time
-from langchain_community.document_loaders import Docx2txtLoader, PyPDFLoader
+from langchain_community.document_loaders import Docx2txtLoader, PyPDFLoader, PyMuPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from utils.prompts import WELCOME_PROMPT
+# from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+# from langchain_google_genai import GoogleGenerativeAIEmbeddings
+# from langchain.utils.math import cosine_similarity
+# from langchain_core.prompts import PromptTemplate
+#
+# from learning_assistant import PersonalLearningAssistant
+from utils import prompts
+from dotenv import load_dotenv, find_dotenv
+
+# Load environment variables
+_ = load_dotenv(find_dotenv())
 
 
 def load_file_to_dir(file, suffix: str) -> str | None:
@@ -30,7 +40,7 @@ def load_file_to_dir(file, suffix: str) -> str | None:
 def remove_file(file_path: str) -> None:
     """
     Deletes temporary file from the saved path.
-    
+
     :param file_path: The path to the temporary file.
     """
     os.remove(file_path)
@@ -53,8 +63,8 @@ def process_file(file_path: str, file_type: str) -> List:
         docs = loader.load()
 
         # Append each page to create an individual text string
-        # for page in docs:
-        #     text += page.page_content
+        for page in docs:
+            text += page.page_content
 
         text_splitter = RecursiveCharacterTextSplitter(
             separators=["\n\n", "\n", " ", ""],
@@ -63,22 +73,22 @@ def process_file(file_path: str, file_type: str) -> List:
             length_function=len,
             is_separator_regex=False,
         )
-        texts = text_splitter.split_documents(docs)
+        texts = text_splitter.create_documents([text])
 
         # # print(texts)print(len(texts))
         #
         return texts
     elif file_type.lower() == "pdf":
         text = ""
-        loader = PyPDFLoader(file_path)
+        loader = PyMuPDFLoader(file_path)
 
-        pages = loader.load()
+        # pages = loader.load()
         # Append each page to create an individual text string
-        # for page in loader.load():
-        #     text += page.page_content
+        for page in loader.load():
+            text += page.page_content
 
         # Replace tab spaces with single spaces (if any)
-        # text = text.replace('\t', ' ')
+        text = text.replace('\t', ' ')
 
         # Splitting the document into chunks of texts
         text_splitter = RecursiveCharacterTextSplitter(
@@ -89,7 +99,7 @@ def process_file(file_path: str, file_type: str) -> List:
             is_separator_regex=False,
         )
         # Create documents from list of texts
-        texts = text_splitter.split_documents(pages)
+        texts = text_splitter.create_documents([text])
 
         # print(len(texts))
         # print(texts)
@@ -102,7 +112,7 @@ def stream_data(data: Optional[str] = None):
     :param data: The text to stream.
     """
     if not data:
-        for word in WELCOME_PROMPT.split(" "):
+        for word in prompts.WELCOME_TEXT.split(" "):
             yield word + " "
             time.sleep(0.1)
     else:
@@ -111,3 +121,50 @@ def stream_data(data: Optional[str] = None):
             time.sleep(0.1)
 
 # doc = process_file(file_path=r"C:\Users\Deju\Downloads\human-resources-resume-template.docx", file_type="docx")
+
+# physics_template = """You are a very smart physics professor. \
+# You are great at answering questions about physics in a concise and easy to understand manner. \
+# When you don't know the answer to a question you admit that you don't know.
+#
+# Here is a question:
+# {query}"""
+#
+# math_template = """You are a very good mathematician. You are great at answering math questions. \
+# You are so good because you are able to break down hard problems into their component parts, \
+# answer the component parts, and then put them together to answer the broader question.
+#
+# Here is a question:
+# {query}"""
+
+# -------------------------------- PROMPT ROUTING -------------------------------------- #
+# embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+# embeddings = HuggingFaceInferenceAPIEmbeddings(
+#     model_name="sentence-transformers/all-MiniLM-l6-v2",
+#     api_key=os.getenv("HUGGINGFACE_API_KEY"),
+# )
+
+# llm_query = prompts.LLM_TEMPLATE
+# rag_query = prompts.RAG_TEMPLATE
+#
+# embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+#
+# prompt_templates = [llm_query, rag_query]
+# prompt_embeddings = embeddings.embed_documents(prompt_templates)
+#
+# assistant = PersonalLearningAssistant()
+#
+#
+# def prompt_router(input_):
+#     query_embedding = embeddings.embed_query(input_["input"])
+#     similarity = cosine_similarity([query_embedding], prompt_embeddings)[0]
+#     most_similar = prompt_templates[similarity.argmax()]
+#     print("Retrieval Query" if most_similar == rag_query else "LLM Query")
+#     if most_similar == rag_query:
+#         if assistant.retriever:
+#             try:
+#                 return assistant.initialize_retrieval_chain(self.retrieve)
+#             except Exception as e:
+#                 print("Error accessing retriever:", e)
+#         else:
+#             print("No document loaded to vectorstore!")
+#     return PromptTemplate.from_template(llm_query)
