@@ -22,7 +22,7 @@ def main():
     # ------------------------------ PAGE CONFIGURATION ------------------------------ #
     st.set_page_config(
         page_title="Assistant",
-        page_icon="🤖",
+        page_icon="📝",
     )
 
     # Load styling from css file
@@ -34,7 +34,7 @@ def main():
         st.title("Settings")
         st.divider()
         st.markdown("""
-                    This is the first version of this learning assistant. Current abilities include:
+                    This is the first version of my learning assistant. Current abilities include:
 
                     - Text Generation
                     - Text Summarization
@@ -48,7 +48,7 @@ def main():
         # File upload
         uploaded_file = st.file_uploader("Upload your slides in .pdf or .docx formats", type=["pdf", "docx"])
         st.info(
-            "On first query about uploaded file, make reference to the file in your prompt",
+            "On first query about uploaded file, make reference to the file in your prompt.",
             icon=":material/info:")
         st.divider()
         st.markdown(
