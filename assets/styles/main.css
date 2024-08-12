@@ -75,4 +75,5 @@ h1, h2, h3, h4, h5, h6, p {
 #root > div:nth-child(1) > div.withScreencast > div > div > div > section.st-emotion-cache-1itdyc2.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11 > div.st-emotion-cache-1gwvy71.eczjsme12 > div > div > div > div > div:nth-child(6) > div > div > div > div > div > div > p {
     font-style: italic;
     font-family: cursive;
+    opacity: 0.6;
 }
