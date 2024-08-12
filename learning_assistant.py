@@ -78,7 +78,7 @@ class PersonalLearningAssistant:
         self.retriever = None
 
     # @st.cache_resource
-    def load_vectorstore_as_retriever(self, documents, search_type="mmr", k=4):
+    def load_vectorstore_as_retriever(self, documents, search_type="mmr", k=5):
         """
         Loads documents into a vectorstore and returns a retriever object with the documents
         saved as embeddings
@@ -167,7 +167,7 @@ class PersonalLearningAssistant:
                 | StrOutputParser()
         )
         response = chain.invoke({"input": question, "chat_history": chat_history})
-        print(response)
+        # print(response)
         if "general" in response.lower():
             chain = self.initialize_llm_chain()
             return chain
@@ -186,7 +186,7 @@ class PersonalLearningAssistant:
         :param chat_history: List of previous conversations (if any).
         :return: The AI's response to the user's query.
         """
-        print(chat_history)
+        # print(chat_history)
         chain = self.route(question, chat_history)
         # print(chat_history)
         response = chain.invoke({
