@@ -1,0 +1,78 @@
+h1, h2, h3, h4, h5, h6, p {
+    font-family: 'Courier New', Courier, monospace;
+    color: whitesmoke;
+    padding-bottom: 0;
+}
+
+[data-testid="stSidebar"] {
+    background-color: rgba(83, 78, 78, 50);
+    opacity: 0.8;
+    /* color: black; */
+}
+
+/* [data-testid="stSidebarUserContent"] {
+    color: red;
+} */
+
+#root > div:nth-child(1) > div.withScreencast > div > div > div > section.st-emotion-cache-1itdyc2.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11 > div.st-emotion-cache-1gwvy71.eczjsme12 > div > div > div > div > div:nth-child(2) > div > div > hr {
+    padding-top: 0;
+    margin-top: 15px;
+    background-color: white;
+}
+/* #root > div:nth-child(1) > div.withScreencast > div > div {
+    font-family: 'Courier New', Courier, monospace;
+} */
+
+#root > div:nth-child(1) > div.withScreencast > div > div > div{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#root > div:nth-child(1) > div.withScreencast > div > div > div > section.st-emotion-cache-1itdyc2.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11 {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+[data-testid="stChatMessageContent"] ol, ul {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+[data-testid="stChatInput"] textarea{
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: col;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.container {
+    opacity: 0.6;
+    width: 250px;
+    background-color: rgba(83, 78, 78, 50);
+    height: 200px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.content {
+    text-align: center;
+}
+
+/* https://i.pinimg.com/736x/2b/58/df/2b58df8df5c096d61a92edafc76e8f9b.jpg */
+
+[data-testid="stCaptionContainer"] {
+    opacity: 0.7;
+    margin: 0;
+    padding-left: 5px;
+}
+
+#root > div:nth-child(1) > div.withScreencast > div > div > div > section.st-emotion-cache-1itdyc2.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11 > div.st-emotion-cache-1gwvy71.eczjsme12 > div > div > div > div > div:nth-child(4) > div > div > hr {
+    margin-top: 8px
+}
+
+#root > div:nth-child(1) > div.withScreencast > div > div > div > section.st-emotion-cache-1itdyc2.eczjsme18 > div.st-emotion-cache-6qob1r.eczjsme11 > div.st-emotion-cache-1gwvy71.eczjsme12 > div > div > div > div > div:nth-child(6) > div > div > div > div > div > div > p {
+    font-style: italic;
+    font-family: cursive;
+}
