@@ -1,6 +1,6 @@
 import streamlit as st
 from learning_assistant import PersonalLearningAssistant
-from utils import tools
+from utils import tools, prompts
 
 
 def load_css(path: str) -> None:
@@ -46,9 +46,10 @@ def main():
         st.divider()
 
         # File upload
-        uploaded_file = st.file_uploader("Upload your slides in .pdf or .docx formats", type=["pdf", "docx"])
+        uploaded_file = st.file_uploader("Upload your slides 📝", type=["pdf", "docx"])
         st.info(
-            "On first query about uploaded file, make reference to the file in your prompt.",
+            "On first query about uploaded file, make reference to the file in your prompt.\n\n"
+            ":exclamation: Refresh to upload a new file!",
             icon=":material/info:")
         st.divider()
         st.markdown(
@@ -58,7 +59,7 @@ def main():
             Click the button below 👇
             """
         )
-        st.link_button("DejusDevspace", "https://github.com/DejusDevspace")
+        st.link_button("DejusDevspace", "https://github.com/DejusDevspace/Personal-Leaning-Assistant-with-RAG-app")
 
     # ----------------------------- PAGE CONTENT ------------------------------ #
     st.markdown(
@@ -83,7 +84,7 @@ def main():
         st.session_state.chat_history = []
 
     if "messages" not in st.session_state:
-        st.session_state.messages = []
+        st.session_state.messages = [{"role": "assistant", "content": prompts.WELCOME_TEXT}]
 
     if "files" not in st.session_state:
         st.session_state.files = []
@@ -148,8 +149,8 @@ def main():
 
             # Update the chat history
             st.session_state.chat_history.extend([
-                {"type": "human", "content": prompt},
-                {"type": "assistant", "content": response}
+                {"role": "user", "content": prompt},
+                {"role": "assistant", "content": response}
             ])
         except Exception as e:
             print("Error:", e)
