@@ -59,7 +59,10 @@ def main():
             Click the button below 👇
             """
         )
-        st.link_button("DejusDevspace", "https://github.com/DejusDevspace/Personal-Leaning-Assistant-with-RAG-app")
+        st.link_button(
+            "DejusDevspace",
+            "https://github.com/DejusDevspace/Personal-Leaning-Assistant-Q-A-Conversational-Chatbot",
+        )
 
     # ----------------------------- PAGE CONTENT ------------------------------ #
     st.markdown(
