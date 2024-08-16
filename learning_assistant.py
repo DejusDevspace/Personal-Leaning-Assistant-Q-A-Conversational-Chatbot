@@ -41,24 +41,24 @@ GROQ_LLM = ChatGroq(
     temperature=0.3,
 )
 
-OLLAMA_LLM = ChatOllama(
-    model="llama3",
-    temperature=0,
-)
+# OLLAMA_LLM = ChatOllama(
+#     model="llama3",
+#     temperature=0,
+# )
 
 GOOGLE_EMBEDDINGS = GoogleGenerativeAIEmbeddings(
     model="models/embedding-001",
     google_api_key=os.getenv("GOOGLE_API_KEY"),
 )
 
-OPENAI_EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-3-large")
+# OPENAI_EMBEDDINGS = OpenAIEmbeddings(model="text-embedding-3-large")
 
-HUGGINGFACE_EMBEDDINGS = HuggingFaceInferenceAPIEmbeddings(
-    model_name="sentence-transformers/all-MiniLM-l6-v2",
-    api_key=os.getenv("HUGGINGFACE_API_KEY"),
-)
+# HUGGINGFACE_EMBEDDINGS = HuggingFaceInferenceAPIEmbeddings(
+#     model_name="sentence-transformers/all-MiniLM-l6-v2",
+#     api_key=os.getenv("HUGGINGFACE_API_KEY"),
+# )
 
-OLLAMA_EMBEDDINGS = OllamaEmbeddings(model="llama3")
+# OLLAMA_EMBEDDINGS = OllamaEmbeddings(model="llama3")
 
 
 class PersonalLearningAssistant:
