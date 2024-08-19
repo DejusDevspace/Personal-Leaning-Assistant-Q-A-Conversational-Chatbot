@@ -118,7 +118,7 @@ class PersonalLearningAssistant:
         # Question-answer prompt
         qa_prompt = ChatPromptTemplate.from_messages([
             ("system", self.prompts.RAG_TEMPLATE),
-            MessagesPlaceholder(variable_name="chat_history"),
+            # MessagesPlaceholder(variable_name="chat_history"),
         ])
 
         # Document chain: feed documents to the pipeline
@@ -160,8 +160,8 @@ class PersonalLearningAssistant:
         """
         chain = (
                 ChatPromptTemplate.from_messages([
+                    # MessagesPlaceholder(variable_name="chat_history"),
                     ("system", self.prompts.ROUTE_TEMPLATE),
-                    MessagesPlaceholder(variable_name="chat_history")
                 ])
                 | self.llm
                 | StrOutputParser()

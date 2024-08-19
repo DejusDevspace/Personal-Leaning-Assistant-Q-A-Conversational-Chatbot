@@ -48,7 +48,7 @@ def main():
         # File upload
         uploaded_file = st.file_uploader("Upload your slides 📝", type=["pdf", "docx"])
         st.info(
-            "On first query about uploaded file, make reference to the file in your prompt.\n\n"
+            "On query about uploaded file, make reference to the file in your prompt.\n\n"
             ":exclamation: Refresh to upload a new file!",
             icon=":material/info:")
         st.divider()

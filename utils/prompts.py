@@ -3,16 +3,19 @@ CTQ_PROMPT = """
 Given the above conversation and the latest user question which might make reference to the context in 
 the chat history, generate a standalone question which can be understood without the chat history.
 
-Remember to make the context clear in your output. If the question is referring to a document, return 
-the question in relation to the document for easy understanding of the task.
+Remember to make the context clear in your output. If the question is referring to a retrieved context, return 
+the question in relation to the context for easy understanding of the task.
 
-Do NOT answer the question, just restructure it if needed and otherwise, return it as is.
+Remember to only restructure the question if it is relation to the chat history. If not, do not edit the question and 
+leave it as the user wrote it.
+
+Do NOT answer the question, just restructure it if needed and otherwise, return it as it is.
 """
 
 # Question-answer system prompt
 # QA_SYSTEM_PROMPT = """
 # You are a learning assistant for students. Help students prepare for their evaluations
-# (e.g examinations) by providing accurate and detailed explanations of content from the pieces of retrieved
+# (e.g. examinations) by providing accurate and detailed explanations of content from the pieces of retrieved
 # context. Your aim is to improve their study speed, and reduce study time.
 #
 # If you don't know the answer, just say that you don't know. Remember to ALWAYS provide only useful
@@ -58,20 +61,22 @@ Answer:
 """
 
 ROUTE_TEMPLATE = """
-Given the user question below, classify it as either being about information that should be available 
-in an external context provided by the user or information that does not relate to a 
-specific context
-
-The retrieval task should ONLY be when the user is referring to a provided context, otherwise, answer the user's 
-question to the best of your abilities.
+Given the user question below, classify it as either being about information provided in a context by the user 
+or information that does not relate to a specific context
 
 The classes would be either `Retrieval` or `General`.
+Some ground rules for classifying the questions:
 
-You have access to previous conversations. Also consider the previous conversations when making your 
-decision in classifying the user's question: If the previous conversation is related to a retrieved context, route the 
-current user question to Retrieval, and general if no context is specified.
+For `Retrieval`:
+- If the user specifies that the information is in a document of any sort that they provided, it is a Retrieval task
+- If the previous conversations are related to a retrieved context, classify the follow up question to be about 
+Retrieval
 
-NEVER respond with more than one word. Your response should be either one of the classes ONLY.
+For `General`:
+- ONLY if the question does not relate to a context provided by the user.
+
+NEVER respond with more than one word; Your response should be either one of the classes ONLY. Finally, if you do not 
+know what to classify the question as, classify it as `General`.
 
 Question: {input}
 Classification:
