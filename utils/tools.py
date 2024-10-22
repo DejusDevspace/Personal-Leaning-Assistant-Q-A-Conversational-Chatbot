@@ -5,6 +5,7 @@ from typing import List, Optional
 import time
 from langchain_community.document_loaders import Docx2txtLoader, PyPDFLoader, PyMuPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import YoutubeLoader
 # from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 # from langchain_google_genai import GoogleGenerativeAIEmbeddings
 # from langchain.utils.math import cosine_similarity
@@ -105,6 +106,37 @@ def process_file(file_path: str, file_type: str) -> List:
         # print(texts)
         return texts
 
+def process_youtube_video(url: str, add_info=False) -> List[any]:
+    """
+    Loads YouTube videos from a url and returns a split documents of the video content,
+    ready for embedding
+
+    :param url: The url of the video to process
+    :param add_info: Optional metadata inclusion
+    :return: Processed documents in form of a list
+    :rtype: List
+    """
+    try:
+        loader = YoutubeLoader.from_youtube_url(
+            url,
+            add_video_info=add_info
+        )
+        transcript = loader.load()[0].page_content
+
+        # Initialize text splitter
+        text_splitter = RecursiveCharacterTextSplitter(
+            separators=["\n\n", "\n", " ", ""],
+            chunk_size=1000,
+            chunk_overlap=50,
+            length_function=len,
+            is_separator_regex=False,
+        )
+
+        # Create documents from transcript text
+        texts = text_splitter.create_documents([transcript])
+        return texts
+    except Exception as e:
+        print("Error loading YouTube video transcript", e)
 
 def stream_data(data: Optional[str] = None):
     """
