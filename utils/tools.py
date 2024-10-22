@@ -112,7 +112,7 @@ def process_youtube_video(url: str, add_info=False) -> List[any]:
     ready for embedding
 
     :param url: The url of the video to process
-    :param add_info: Optional metadata inclusion
+    :param add_info: Optional metadata inclusion (boolean)
     :return: Processed documents in form of a list
     :rtype: List
     """
