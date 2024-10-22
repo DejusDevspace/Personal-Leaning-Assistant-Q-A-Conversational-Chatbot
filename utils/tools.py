@@ -1,6 +1,7 @@
 import io
 import os
 import tempfile
+import re
 from typing import List, Optional
 import time
 from langchain_community.document_loaders import Docx2txtLoader, PyPDFLoader, PyMuPDFLoader
@@ -151,6 +152,17 @@ def stream_data(data: Optional[str] = None):
         for word in data.split(" "):
             yield word + " "
             time.sleep(0.1)
+
+def is_youtube_link(url) -> bool:
+    """
+    Checks if a text is a youtube link using regular expressions
+    :param url: The url to check
+    :return: boolean
+    """
+    youtube_regex = re.compile(
+        r'(https?://)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)/.+'
+    )
+    return bool(youtube_regex.match(url))
 
 # doc = process_file(file_path=r"C:\Users\Deju\Downloads\human-resources-resume-template.docx", file_type="docx")
 
