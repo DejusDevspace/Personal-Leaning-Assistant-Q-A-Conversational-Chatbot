@@ -1,3 +1,5 @@
+from typing import final
+
 import streamlit as st
 from learning_assistant import PersonalLearningAssistant
 from utils import tools, prompts
@@ -29,20 +31,20 @@ def main():
     load_css("assets/styles/main.css")
 
     # ------------------------------ SIDEBAR ------------------------------ #
-    # st.title("Learning assistant 📝 ")
+    # st.title("Learning assistant 📝")
     with st.sidebar:
         st.title("Settings")
         st.divider()
         st.markdown("""
-                    This is the first version of my learning assistant. Current abilities include:
-
-                    - Text Generation
-                    - Text Summarization
-                    - File Upload
-                    - Learning Assistance
-
-                    More functionalities to be added...
-                    """)
+                Current abilities include:
+                
+                - Text Generation
+                - Text Summarization
+                - File Upload and querying
+                - Learning Assistance
+                - YouTube video querying and summarization
+        """
+        )
         st.divider()
 
         # File upload
@@ -51,6 +53,7 @@ def main():
             "On query about uploaded file, make reference to the file in your prompt.\n\n"
             ":exclamation: Refresh to upload a new file!",
             icon=":material/info:")
+        youtube_link = st.text_input("Input youtube video url 👇")
         st.divider()
         st.markdown(
             """
@@ -93,7 +96,10 @@ def main():
         st.session_state.files = []
 
     if "assistant" not in st.session_state:
-        st.session_state.assistant = PersonalLearningAssistant(model="llama3-70b-8192", temperature=0.4)
+        st.session_state.assistant = PersonalLearningAssistant(model="llama3-70b-8192", temperature=0.6)
+
+    if "youtube_link" not in st.session_state:
+        st.session_state.youtube_link = []
 
     # CONVERSATION CHAT HISTORY #
     # Display conversation history on app rerun
@@ -112,6 +118,49 @@ def main():
             documents = tools.process_file(file_path, file_type)
             st.session_state.assistant.load_vectorstore_as_retriever(documents)
             st.session_state.files.append(file_name)
+
+    # YOUTUBE VIDEO LINK
+    if youtube_link:
+        if youtube_link in st.session_state.youtube_link:
+            pass
+        else:
+            st.session_state.youtube_link.append(youtube_link)
+            with st.spinner("Loading video summary..."):
+                prompt = prompts.YOUTUBE_USER_QUERY
+                # Check if the input text is a YouTube link
+                if tools.is_youtube_link(youtube_link):
+                    # print(youtube_link)
+                    try:
+                        transcript = tools.process_youtube_video(youtube_link, add_info=False)
+                        st.session_state.assistant.load_vectorstore_as_retriever(transcript)
+                        response = st.session_state.assistant.initialize_youtube_chain(transcript)
+
+                        # Display the user's message
+                        with st.chat_message("user"):
+                            st.markdown(prompt)
+
+                        # Display the AI's message
+                        with st.chat_message("assistant"):
+                            stream = tools.stream_data(response)
+                            st.write_stream(stream)
+                    except Exception as e:
+                        st.error("Sorry, cannot provide summary at the moment")
+                        print("Error loading YouTube Video or processing summary:\n", e)
+                    else:
+                        try:
+                            # Add new conversations to messages and chat history
+                            st.session_state.messages.append({"role": "user", "content": prompt})
+                            st.session_state.messages.append({"role": "assistant", "content": response})
+
+                            # Update the chat history
+                            st.session_state.chat_history.extend([
+                                {"role": "user", "content": prompt},
+                                {"role": "assistant", "content": response}
+                            ])
+                        except Exception as e:
+                            print("Error:", e)
+                else:
+                    st.error("Enter a valid YouTube link!")
 
     if prompt := st.chat_input("Enter a prompt..."):
         # Display the user's message

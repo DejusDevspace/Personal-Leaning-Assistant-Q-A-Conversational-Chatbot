@@ -107,7 +107,7 @@ def process_file(file_path: str, file_type: str) -> List:
         # print(texts)
         return texts
 
-def process_youtube_video(url: str, add_info=False) -> List[any]:
+def process_youtube_video(url: str, add_info: bool=False) -> List[any]:
     """
     Loads YouTube videos from a url and returns a split documents of the video content,
     ready for embedding

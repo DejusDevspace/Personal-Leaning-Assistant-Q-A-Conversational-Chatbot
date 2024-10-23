@@ -35,12 +35,11 @@ Hello, I am your learning assistant. How can I help you today?
 # Retrieval template
 RAG_TEMPLATE = """
 You are a very helpful college learning assistant. You help college students prepare for their examinations 
-by providing accurate information from their notes. You are also good at creating sample examination questions for the 
-students if they ask you to.
+by providing accurate information from their notes, and other provided content.
 
-Your main goal is to reduce their study time by delivering the most relevant information to them from their notes.
+Your main goal is to reduce their study time by delivering the most relevant information to them from their content.
 
-If you cannot provide an accurate answer from the notes, just say that you don't know.
+If you cannot provide an accurate answer from the provided content, just say that you don't know.
 
 ALWAYS remember to provide only useful information and keep the answer concise.
 
@@ -60,6 +59,40 @@ Question: {input}
 Answer:
 """
 
+# YouTube video summary system prompt
+YOUTUBE_SUMMARY_PROMPT = """
+You are given a transcript to summarize.
+Write a verbose detail of the following:
+
+{text}
+Details:
+"""
+
+YOUTUBE_USER_QUERY = """
+Create a summary of the YouTube video I uploaded
+"""
+
+# YouTube video summary refine chain prompt
+YOUTUBE_REFINE_TEMPLATE = """
+You are an expert YouTube video summarizer for students. Your main aim is to provide valuable information from 
+video transcripts to help users understand the content of the videos properly without needing to watch the whole
+video.
+
+Your job is to produce a final summary. ALWAYS start your summary with 'I see you provided a video link...'
+We have provided an existing summary up to a certain point: 
+
+{existing_answer}
+
+We want a refined version of the existing summary (ONLY IF NEEDED) based on the additional context below
+
+{text}
+
+Given the new context, refine the original summary to contain all the necessary information from the transcript.
+The final format of the summary should be in sections, which can utilize structured formats like bullet points or 
+sectioned lists with key information to make it easily readable and understandable by the user.
+"""
+
+# Contextual routing template
 ROUTE_TEMPLATE = """
 Given the user question below, classify it as either being about information provided in a context by the user 
 or information that does not relate to a specific context

@@ -19,6 +19,7 @@ from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_core.output_parsers import StrOutputParser
 # from langchain.utils.math import cosine_similarity
 # from langchain_chroma import Chroma
+from langchain.chains.summarize import load_summarize_chain
 from typing import List
 # from operator import itemgetter
 
@@ -150,6 +151,56 @@ class PersonalLearningAssistant:
 
         final_chain = contextualize_chain | llm_chain
         return final_chain
+
+    def initialize_youtube_chain(self, transcript: List[any]) -> str:
+        """
+        Creates a chain for the assistant to handle YouTube video queries
+        :return: Runnable: LLM chain
+        """
+        # Prompt for handling chat history
+        contextualize_prompt = ChatPromptTemplate.from_messages([
+            MessagesPlaceholder(variable_name="chat_history"),
+            ("user", "{input}"),
+            ("user", self.prompts.CTQ_PROMPT),
+        ])
+
+        retriever_chain = create_history_aware_retriever(
+            llm=self.llm,
+            retriever=self.retriever,
+            prompt=contextualize_prompt,
+        )
+
+        # Summary system prompt
+        qa_prompt = ChatPromptTemplate.from_messages([
+            ("system", self.prompts.YOUTUBE_SUMMARY_PROMPT),
+        ])
+
+        # Refine chain prompt
+        refine_prompt = PromptTemplate.from_template(prompts.YOUTUBE_REFINE_TEMPLATE)
+
+        # Summarize chain
+        summarize_chain = load_summarize_chain(
+            llm=self.llm,
+            chain_type="refine",
+            question_prompt=qa_prompt,
+            refine_prompt=refine_prompt,
+            return_intermediate_steps=True,
+            input_key="input_documents",
+            output_key="output_text",
+        )
+
+        # Final chain: retrieval chain
+        retrieval_chain = retriever_chain | summarize_chain
+
+        # Chain run and output
+        result = retrieval_chain.invoke(
+            {
+                "input": prompts.YOUTUBE_USER_QUERY,
+                "input_documents": transcript
+            }
+        )
+        summary = result["output_text"]
+        return summary
 
     def route(self, question: str, chat_history: List) -> Runnable:
         """
